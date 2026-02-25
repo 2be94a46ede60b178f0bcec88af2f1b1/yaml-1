@@ -19,11 +19,10 @@ profile:
   store-selected: true
   store-fake-ip: true
 
-# --- 2. 您的 9 个强力节点 (已更新日本2节点) ---
 proxy-providers:
   Airport1:  # <--- 已修复：名称修改为 Airport1 以匹配下方的引用
     type: http
-    # ==> 在这里填入您的第1个机场订阅链接 <==
+    # ==> 订阅链接 <==
     url: "自建订阅"
     # 更新间隔（天）
     interval: 86400
@@ -31,7 +30,6 @@ proxy-providers:
       skip-cert-verify: false # 通常为 false，除非订阅需要
 
 # --- 3. 策略组 ---
-# --- 3. 策略组 (带图标 + 正则匹配增强版) ---
 proxy-groups:
   # 1. 自动测速 (图标: ♻️)
   - name: ♻️ 自动选择

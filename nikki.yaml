@@ -31,6 +31,13 @@ proxy-providers:
 
 # --- 3. 策略组 ---
 proxy-groups:
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - 🚀 默认代理
+      - ♻️ 自动选择
+      - DIRECT
+
   # 1. 自动测速 (图标: ♻️)
   - name: ♻️ 自动选择
     type: url-test
@@ -225,6 +232,39 @@ rule-providers:
     path: ./ruleset/tmdb.yaml
     interval: 86400
 
+
+# --- 5. 高级功能模块 ---
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+
+tun:
+  enable: true
+  stack: system
+  dns-hijack: ["any:53"]
+  auto-route: true
+  auto-detect-interface: true
+
+# --- 6. DNS 优化 ---
+dns:
+  enable: true
+  cache-algorithm: arc
+  listen: 127.0.0.1:1053
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  prefer-h3: false
+  ipv6: true
+  respect-rules: true
+  use-hosts: false
+  use-system-hosts: false
   fake-ip-filter:
     - "+.lan"
     - "+.local"
@@ -295,6 +335,7 @@ rule-providers:
     "geosite:geolocation-!cn":
       - tls://dns.google
       - tls://cloudflare-dns.com
+
 
 # --- 分流规则 ---
 

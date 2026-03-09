@@ -23,7 +23,7 @@ proxy-providers:
   Airport1:  # <--- 已修复：名称修改为 Airport1 以匹配下方的引用
     type: http
     # ==> 订阅链接 <==
-    url: "自建订阅"
+    url: "http://192.168.100.80:3008/fKA6xwFUzpCc3RhahafE/download/%E8%87%AA%E5%BB%BA%E6%B5%8B%E8%AF%95"
     # 更新间隔（天）
     interval: 86400
     override:
@@ -49,8 +49,7 @@ proxy-groups:
     include-all: true
     filter: "台湾|美西|新加坡|印度|自建|日本|RN|DMIT|VMISS|盐湖城|海创|HK"
 
-
-  # 3. 业务策略组 (带精准图标)
+  #  业务策略组 (带精准图标)
   - name: 📹 YouTube
     type: select
     proxies:
@@ -67,7 +66,7 @@ proxy-groups:
     include-all: true
     filter: "台湾|美西|新加坡|印度|自建|日本|RN|DMIT|VMISS|盐湖城|海创|HK"
 
-  - name: 🤖 ChatGPT
+  - name: 🤖 OpenAI
     type: select
     proxies:
       - ♻️ 自动选择
@@ -86,7 +85,7 @@ proxy-groups:
 
   - name: 📲 Telegram
     type: url-test
-    url: http://www.gstatic.com/generate_204
+    url: https://www.gstatic.com/generate_204
     interval: 300
     tolerance: 50
     include-all: true
@@ -99,8 +98,7 @@ proxy-groups:
       - DIRECT
     include-all: true
     filter: "台湾|美西|新加坡|印度|自建|日本|RN|DMIT|VMISS|盐湖城|海创|HK"
-
-  - name: 🇺🇸 美国专用
+  - name: 🎬 tmdb刮削
     type: load-balance          # 核心修改：改为负载均衡模式
     strategy: round-robin       # 调度策略：轮询（一个流量换一个出口）
     url: https://www.gstatic.com/generate_204
@@ -109,20 +107,6 @@ proxy-groups:
     # 正则逻辑：确保池子里只有美国出口，实现多出口并行
     filter: "🇺🇸|美西|盐湖城|DMIT|RN|VMISS"
 
-  # 4. 漏网之鱼 (图标: 🐟)
-  - name: 🐟 漏网之鱼
-    type: select
-    proxies:
-      - 🚀 默认代理
-      - ♻️ 自动选择
-      - DIRECT
-    include-all: true
-    filter: "台湾|美西|新加坡|印度|自建|日本|RN|DMIT|VMISS|盐湖城|海创|HK"
-
-  - name: 直连
-    type: select
-    proxies:
-      - DIRECT
 
 
 
@@ -192,6 +176,34 @@ rule-providers:
     interval: 86400
 
 
+  BiliBili:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.yaml"
+    path: ./ruleset/BiliBili.yaml
+    interval: 86400
+
+  Apple:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.yaml"
+    path: ./ruleset/Apple.yaml
+    interval: 86400
+
+  115:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/115/115.yaml"
+    path: ./ruleset/115.yaml
+    interval: 86400
+
+  WeChat:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/WeChat/WeChat.yaml"
+    path: ./ruleset/WeChat.yaml
+    interval: 86400
+
   ChinaMax:
     type: http
     behavior: classical
@@ -205,39 +217,6 @@ rule-providers:
     url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.yaml"
     path: ./ruleset/Lan.yaml
     interval: 86400
-
-# --- 5. 高级功能模块 ---
-sniffer:
-  enable: true
-  sniff:
-    HTTP:
-      ports: [80, 8080-8880]
-      override-destination: true
-    TLS:
-      ports: [443, 8443]
-    QUIC:
-      ports: [443, 8443]
-
-tun:
-  enable: true
-  stack: system
-  dns-hijack: ["any:53"]
-  auto-route: true
-  auto-detect-interface: true
-
-# --- 6. DNS 优化 ---
-dns:
-  enable: true
-  cache-algorithm: arc
-  listen: 127.0.0.1:1053
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  fake-ip-filter-mode: blacklist
-  prefer-h3: false
-  ipv6: true
-  respect-rules: true
-  use-hosts: false
-  use-system-hosts: false
 
   fake-ip-filter:
     - "+.lan"
@@ -313,52 +292,58 @@ dns:
 # --- 分流规则 ---
 
 rules:
-  # --- 规则集（rule-providers）需要在 rules 中引用才会生效 ---
-  - RULE-SET,LAN,DIRECT
-  - RULE-SET,Reject,REJECT
-  - RULE-SET,Hijacking,REJECT
-  - RULE-SET,Privacy,REJECT
+  # ==============================
+  # 0) DNS 上游固定走代理（避免 DoT/DoH 连接落入兜底）
+  # ==============================
+  - DOMAIN,cloudflare-dns.com,🚀 默认代理
+  - DOMAIN,dns.google,🚀 默认代理
+  - DOMAIN,dns.google.com,🚀 默认代理
+  - DOMAIN,dns.cloudflare.com,🚀 默认代理
+  - DOMAIN-SUFFIX,docker.fnnas.com,🚀 默认代理
+  - DOMAIN-SUFFIX,docker-cache1.fnnas.com,🚀 默认代理
+
+  # ==============================
+  # 1) 🇨🇳 大陆安全隔离区（必须放最前）
+  # ==============================
+  # - GEOIP,PRIVATE,DIRECT
+  # - GEOIP,CN,DIRECT
+  # - GEOSITE,CN,DIRECT 
+
+  # ==============================
+  # 2) 业务规则集（RULE-SET）
+  # ==============================
   - RULE-SET,YouTube,📹 YouTube
   - RULE-SET,Netflix,🎥 NETFLIX
   - RULE-SET,Telegram,📲 Telegram
   - RULE-SET,Google,🍀 Google
   - RULE-SET,GitHub,👨🏿‍💻 GitHub
-  - RULE-SET,OpenAI,🤖 ChatGPT
-  - RULE-SET,ChinaMax,DIRECT
+  - RULE-SET,OpenAI,🤖 OpenAI
 
-  - DOMAIN,cloudflare-dns.com,🚀 默认代理
-  - DOMAIN,dns.google,🚀 默认代理
-
-  # （可选但推荐）Google DoH 域名也锁定走代理，避免某些组件改用 DoH 域名
-  - DOMAIN,dns.google.com,🚀 默认代理
-  - DOMAIN,dns.cloudflare.com,🚀 默认代理
+  - RULE-SET,BiliBili,DIRECT
+  - RULE-SET,Apple,DIRECT
+  - RULE-SET,115,DIRECT  # ☁️ 115网盘
+  - RULE-SET,WeChat,DIRECT  # 🟢 微信
   # ==============================
-  # 🇨🇳 大陆安全隔离区（必须放最前）
+  # 3) 通用直连集合（放在业务后，避免抢流量）
+  # ==============================
+  - RULE-SET,LAN,DIRECT
+
+  # ==============================
+  # 4) 你手写的补充规则（可留可删，但要放在后面）
   # ==============================
 
-  # 1️⃣ 局域网 & 私有地址永远直连（防止本地资源误代理）
-  - GEOIP,PRIVATE,DIRECT
+  - DOMAIN-SUFFIX,themoviedb.org,🎬 tmdb刮削
+  - DOMAIN-SUFFIX,api.themoviedb.org,🎬 tmdb刮削
+  - DOMAIN-SUFFIX,www.themoviedb.org,🎬 tmdb刮削
+  - DOMAIN-SUFFIX,tmdb.org,🎬 tmdb刮削
+  - DOMAIN-SUFFIX,thetvdb.com,🎬 tmdb刮削
+  - DOMAIN-SUFFIX,api.thetvdb.com,🎬 tmdb刮削
+  - DOMAIN-SUFFIX,fanart.tv,🎬 tmdb刮削
 
-  # 2️⃣ 中国大陆IP强制直连（IP级兜底，防止误走代理）
-  - GEOIP,CN,DIRECT
 
-  # 3️⃣ 中国大陆域名集合强制直连（比 .cn 覆盖更完整）
-  - DOMAIN,fhnfile.oss-cn-shenzhen.aliyuncs.com,直连
-  - DOMAIN-SUFFIX,115.com,直连
-  - DOMAIN-SUFFIX,115cdn.com,直连
-  - DOMAIN-SUFFIX,115cdn.net,直连
-  - DOMAIN-SUFFIX,115img.com,直连
-  - DOMAIN-SUFFIX,116cd.cn,直连
-  - DOMAIN-SUFFIX,116cd.com,直连
-  - DOMAIN-SUFFIX,116cd.net,直连
-  - DOMAIN-SUFFIX,anxia.com,直连
-  - DOMAIN-SUFFIX,sq.cc,直连
-  - DOMAIN-SUFFIX,thetvdb.com,🇺🇸 美国专用
-  - DOMAIN-SUFFIX,api.thetvdb.com,🇺🇸 美国专用
-  - DOMAIN-SUFFIX,fanart.tv,🇺🇸 美国专用
 
-  # --- 2. Talkatone / Telegram (对接策略组 📲 Telegram) ---
-  # 解释：不再写死具体节点，而是交给 Telegram 策略组去动态选路
+
+  # Telegram 你手写的域名/IP（如果 RULE-SET,Telegram 已经覆盖，这些其实可选）
   - DOMAIN-SUFFIX,mobilefuse.com,📲 Telegram
   - DOMAIN-SUFFIX,inmobi.com,📲 Telegram
   - DOMAIN-SUFFIX,crashlytics.com,📲 Telegram
@@ -370,14 +355,13 @@ rules:
   - DOMAIN-SUFFIX,tktn.at,📲 Telegram
   - DOMAIN-SUFFIX,api.telegram.org,📲 Telegram
   - DOMAIN-SUFFIX,core.telegram.org,📲 Telegram
-  
-  # IP 段同样交给策略组处理
   - IP-CIDR,50.117.27.0/24,📲 Telegram,no-resolve
   - IP-CIDR,69.46.75.0/24,📲 Telegram,no-resolve
   - IP-CIDR,205.164.56.0/24,📲 Telegram,no-resolve
   - IP-CIDR,63.251.124.0/24,📲 Telegram,no-resolve
   - IP-CIDR,91.108.56.0/24,📲 Telegram,no-resolve
 
-  # --- 3. 兜底规则 ---
+  # ==============================
+  # 5) 兜底
+  # ==============================
   - MATCH,🐟 漏网之鱼
-

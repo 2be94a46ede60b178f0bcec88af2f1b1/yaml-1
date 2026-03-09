@@ -1,0 +1,9 @@
+payload:
+  - name: 🎬 tmdb刮削
+  - DOMAIN-SUFFIX,themoviedb.org
+  - DOMAIN-SUFFIX,api.themoviedb.org
+  - DOMAIN-SUFFIX,www.themoviedb.org
+  - DOMAIN-SUFFIX,tmdb.org
+  - DOMAIN-SUFFIX,thetvdb.com
+  - DOMAIN-SUFFIX,api.thetvdb.com
+  - DOMAIN-SUFFIX,fanart.tv

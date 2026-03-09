@@ -150,7 +150,7 @@ rule-providers:
   Telegram:
     type: http
     behavior: classical
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.yaml"
+    url: "https://raw.githubusercontent.com/2be94a46ede60b178f0bcec88af2f1b1/Nikki/main/Telegram.yaml"
     path: ./ruleset/Telegram.yaml
     interval: 86400
 
@@ -216,6 +216,13 @@ rule-providers:
     behavior: classical
     url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.yaml"
     path: ./ruleset/Lan.yaml
+    interval: 86400
+
+  TMDB:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/2be94a46ede60b178f0bcec88af2f1b1/Nikki/main/tmdb.yaml"
+    path: ./ruleset/tmdb.yaml
     interval: 86400
 
   fake-ip-filter:
@@ -315,6 +322,7 @@ rules:
   - RULE-SET,YouTube,📹 YouTube
   - RULE-SET,Netflix,🎥 NETFLIX
   - RULE-SET,Telegram,📲 Telegram
+  - RULE-SET,TMDB,🎬 tmdb刮削
   - RULE-SET,Google,🍀 Google
   - RULE-SET,GitHub,👨🏿‍💻 GitHub
   - RULE-SET,OpenAI,🤖 OpenAI
@@ -331,35 +339,6 @@ rules:
   # ==============================
   # 4) 你手写的补充规则（可留可删，但要放在后面）
   # ==============================
-
-  - DOMAIN-SUFFIX,themoviedb.org,🎬 tmdb刮削
-  - DOMAIN-SUFFIX,api.themoviedb.org,🎬 tmdb刮削
-  - DOMAIN-SUFFIX,www.themoviedb.org,🎬 tmdb刮削
-  - DOMAIN-SUFFIX,tmdb.org,🎬 tmdb刮削
-  - DOMAIN-SUFFIX,thetvdb.com,🎬 tmdb刮削
-  - DOMAIN-SUFFIX,api.thetvdb.com,🎬 tmdb刮削
-  - DOMAIN-SUFFIX,fanart.tv,🎬 tmdb刮削
-
-
-
-
-  # Telegram 你手写的域名/IP（如果 RULE-SET,Telegram 已经覆盖，这些其实可选）
-  - DOMAIN-SUFFIX,mobilefuse.com,📲 Telegram
-  - DOMAIN-SUFFIX,inmobi.com,📲 Telegram
-  - DOMAIN-SUFFIX,crashlytics.com,📲 Telegram
-  - DOMAIN-SUFFIX,talkatone.com,📲 Telegram
-  - DOMAIN-SUFFIX,kochava.com,📲 Telegram
-  - DOMAIN-SUFFIX,cohere.com,📲 Telegram
-  - DOMAIN-SUFFIX,ip-api.com,📲 Telegram
-  - DOMAIN-SUFFIX,agkn.com,📲 Telegram
-  - DOMAIN-SUFFIX,tktn.at,📲 Telegram
-  - DOMAIN-SUFFIX,api.telegram.org,📲 Telegram
-  - DOMAIN-SUFFIX,core.telegram.org,📲 Telegram
-  - IP-CIDR,50.117.27.0/24,📲 Telegram,no-resolve
-  - IP-CIDR,69.46.75.0/24,📲 Telegram,no-resolve
-  - IP-CIDR,205.164.56.0/24,📲 Telegram,no-resolve
-  - IP-CIDR,63.251.124.0/24,📲 Telegram,no-resolve
-  - IP-CIDR,91.108.56.0/24,📲 Telegram,no-resolve
 
   # ==============================
   # 5) 兜底

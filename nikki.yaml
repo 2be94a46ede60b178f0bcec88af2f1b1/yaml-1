@@ -23,7 +23,7 @@ proxy-providers:
   Airport1:  # <--- 已修复：名称修改为 Airport1 以匹配下方的引用
     type: http
     # ==> 订阅链接 <==
-    url: "http://192.168.100.80:3008/fKA6xwFUzpCc3RhahafE/download/%E8%87%AA%E5%BB%BA%E6%B5%8B%E8%AF%95"
+    url: "XXXXXXXXXXXXXX"
     # 更新间隔（天）
     interval: 86400
     override:

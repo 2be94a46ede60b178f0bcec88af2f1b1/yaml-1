@@ -19,14 +19,14 @@ profile:
   store-fake-ip: true
 
 proxy-providers:
-  Airport1:  # <--- 已修复：名称修改为 Airport1 以匹配下方的引用
+  Airport1:  
     type: http
     # ==> 订阅链接 <==
     url: "XXXXXXX"
     # 更新间隔（天）
     interval: 600
     override:
-      skip-cert-verify: false # 通常为 false，除非订阅需要
+      skip-cert-verify: false 
 
 # --- 3. 策略组 ---
 proxy-groups:
@@ -98,7 +98,7 @@ proxy-groups:
     filter: "台湾|美西|新加坡|印度|自建|日本|RN|DMIT|VMISS|RFC|bage|海创|HK"
       
   - name: 🎬 tmdb刮削
-    type: url-test          # 核心修改：改为负载均衡模式
+    type: url-test          
     url: https://api.themoviedb.org/3/configuration
     interval: 300
     include-all: true
